@@ -125,9 +125,19 @@
   <ItemGroup>
     <ClCompile Include="assemble.cpp" />
     <ClCompile Include="assemble_test.cpp" />
+    <ClCompile Include="Break.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="CarFactory.cpp" />
+    <ClCompile Include="defineEnum.h" />
+    <ClCompile Include="DisplayMenu_Factory.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Steering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DisplayMenu_Factory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
