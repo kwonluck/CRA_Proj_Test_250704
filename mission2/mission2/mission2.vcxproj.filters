@@ -16,6 +16,18 @@
     <Filter Include="테스트파일">
       <UniqueIdentifier>{82201658-5d87-4fd7-bd96-c15047ee7631}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Car">
+      <UniqueIdentifier>{7873a202-7417-4689-a98a-5a51fea9e566}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{677da746-4c0f-41d1-be4c-ed17379f33a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Brake">
+      <UniqueIdentifier>{04f73cbe-c725-4e6d-83fe-a2688fd76ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Steering">
+      <UniqueIdentifier>{b61aff33-0513-473e-ae0d-ae1b81bb7134}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="assemble.cpp">
@@ -24,26 +36,35 @@
     <ClCompile Include="assemble_test.cpp">
       <Filter>테스트파일</Filter>
     </ClCompile>
-    <ClCompile Include="Car.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Steering.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Break.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayMenu_Factory.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CarFactory.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="defineEnum.h">
       <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Car_IF.h">
+      <Filter>Car</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Brake_Factory.h">
+      <Filter>Brake</Filter>
+    </ClCompile>
+    <ClCompile Include="Car_Factory.h">
+      <Filter>Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine_Factory.h">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine_IF.h">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Steering_Factory.h">
+      <Filter>Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Steering_IF.h">
+      <Filter>Steering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +73,9 @@
   <ItemGroup>
     <ClInclude Include="DisplayMenu_Factory.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Brake_IF.h">
+      <Filter>Brake</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
