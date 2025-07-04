@@ -1,4 +1,4 @@
-#ifdef _DEBUG
+ï»¿#ifdef _DEBUG
 
 #include "gmock/gmock.h"
 
@@ -18,31 +18,27 @@ int main()
 
 int stack[10];
 
-void selectCarType(int answer);
-void selectEngine(int answer);
-void selectbrakeSystem(int answer);
-void selectSteeringSystem(int answer);
-void runProducedCar();
-void testProducedCar();
-void delay(int ms);
-
-void show_SelectMenu(int step);
-
-void clear_UserInput(char  user_input[100]);
-
-bool check_AnswerIsNumber(char* user_input, int& answer);
-
-bool isAnswer_Exit(char  user_input[100]);
-
+void show_SelectMenu(const int& step);
+void printMenu_SelectCarType();
+void printMenu_SelectEngine();
+void printMenu_SelectBrake();
+void printMenu_SelectSteering();
 void printMenu_RunTest();
 
-void printMenu_SelectSteering();
+void clear_UserInput(char  user_input[100]);
+bool isAnswer_Exit(const char* user_input);
+bool check_AnswerIsNumber(char* user_input, int& answer);
+bool check_Invalid_inputNum(const int& step, const int& answer);
 
-void printMenu_SelectBrake();
+void do_Answer(int& step, const int& answer);
+void selectCarType(const int& answer);
+void selectEngine(const int& answer);
+void selectbrakeSystem(const int& answer);
+void selectSteeringSystem(const int& answer);
+void runProducedCar();
+void testProducedCar();
 
-void printMenu_SelectEngine();
-
-void printMenu_SelectCarType();
+void delay(const int& ms);
 
 enum QuestionType
 {
@@ -50,7 +46,7 @@ enum QuestionType
     Engine_Q,
     brakeSystem_Q,
     SteeringSystem_Q,
-    Run_Test,
+    Run_Test_Q,
 };
 
 enum CarType
@@ -80,7 +76,13 @@ enum SteeringSystem
     MOBIS
 };
 
-void delay(int ms)
+enum RunTest
+{
+    Run = 1,
+    Test
+};
+
+void delay(const int& ms)
 {
     volatile int sum = 0;
     for (int i = 0; i < 1000; i++)
@@ -108,141 +110,38 @@ int main()
         printf("INPUT > ");
         fgets(user_input, sizeof(user_input), stdin);
 
-        // ¿£ÅÍ °³Çà¹®ÀÚ Á¦°Å
+        // ì—”í„° ê°œí–‰ë¬¸ìž ì œê±°
         clear_UserInput(user_input);
 
-        // exit ¸í·É¾î È®ÀÎ
-        if (isAnswer_Exit(user_input)) 
+        // exit ëª…ë ¹ì–´ í™•ì¸
+        if (isAnswer_Exit(user_input))
             break;
-        
-        // ¼ýÀÚ·Î µÈ ´ë´äÀÎÁö È®ÀÎ ¹× ¼ýÀÚ·Î º¯È¯
+
+        // ìˆ«ìžë¡œ ëœ ëŒ€ë‹µì¸ì§€ í™•ì¸ ë° ìˆ«ìžë¡œ ë³€í™˜
         int answer = 0;
         if (check_AnswerIsNumber(user_input, answer) == false)
             continue;
 
+        if (check_Invalid_inputNum(step, answer))
+            continue;
 
-        if (step == CarType_Q && !(answer >= 1 && answer <= 3))
+        if (answer == 0)
         {
-            printf("ERROR :: Â÷·® Å¸ÀÔÀº 1 ~ 3 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
-            delay(800);
+            // ì²˜ìŒìœ¼ë¡œ ëŒì•„ê°€ê¸°
+            if (step == Run_Test_Q)
+                step = CarType_Q;
+            // ì´ì „ìœ¼ë¡œ ëŒì•„ê°€ê¸°
+            if (step >= 1)
+                step -= 1;
             continue;
         }
 
-        if (step == Engine_Q && !(answer >= 0 && answer <= 4))
-        {
-            printf("ERROR :: ¿£ÁøÀº 1 ~ 4 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
-            delay(800);
-            continue;
-        }
-
-        if (step == brakeSystem_Q && !(answer >= 0 && answer <= 3))
-        {
-            printf("ERROR :: Á¦µ¿ÀåÄ¡´Â 1 ~ 3 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
-            delay(800);
-            continue;
-        }
-
-        if (step == SteeringSystem_Q && !(answer >= 0 && answer <= 2))
-        {
-            printf("ERROR :: Á¶ÇâÀåÄ¡´Â 1 ~ 2 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
-            delay(800);
-            continue;
-        }
-
-        if (step == Run_Test && !(answer >= 0 && answer <= 2))
-        {
-            printf("ERROR :: Run ¶Ç´Â Test Áß ÇÏ³ª¸¦ ¼±ÅÃ ÇÊ¿ä\n");
-            delay(800);
-            continue;
-        }
-
-        // Ã³À½À¸·Î µ¹¾Æ°¡±â
-        if (answer == 0 && step == Run_Test)
-        {
-            step = CarType_Q;
-            continue;
-        }
-
-        // ÀÌÀüÀ¸·Î µ¹¾Æ°¡±â
-        if (answer == 0 && step >= 1)
-        {
-            step -= 1;
-            continue;
-        }
-
-        if (step == CarType_Q)
-        {
-            selectCarType(answer);
-            delay(800);
-            step = Engine_Q;
-        }
-        else if (step == Engine_Q)
-        {
-            selectEngine(answer);
-            delay(800);
-            step = brakeSystem_Q;
-        }
-        else if (step == brakeSystem_Q)
-        {
-            selectbrakeSystem(answer);
-            delay(800);
-            step = SteeringSystem_Q;
-        }
-        else if (step == SteeringSystem_Q)
-        {
-            selectSteeringSystem(answer);
-            delay(800);
-            step = Run_Test;
-        }
-        else if (step == Run_Test && answer == 1)
-        {
-            runProducedCar();
-            delay(2000);
-        }
-        else if (step == Run_Test && answer == 2)
-        {
-            printf("Test...\n");
-            delay(1500);
-            testProducedCar();
-            delay(2000);
-        }
+        do_Answer(step, answer);
     }
 }
 
-void clear_UserInput(char user_input[100])
-{
-    char* context = nullptr;
-    user_input = strtok_s(user_input, "\r", &context);
-    if (user_input != nullptr)
-    {
-        user_input = strtok_s(user_input, "\n", &context);
-    }
-}
 
-bool check_AnswerIsNumber(char* user_input, int& answer)
-{
-    char* stringAnswer;
-    answer = strtol(user_input, &stringAnswer, 10); // ¹®ÀÚ¿­À» 10Áø¼ö·Î º¯È¯
-    if (*stringAnswer != '\0')
-    {
-        printf("ERROR :: ¼ýÀÚ¸¸ ÀÔ·Â °¡´É\n");
-        delay(800);
-        return false;
-    }
-    return true;
-}
-
-bool isAnswer_Exit(char  user_input[100])
-{
-    if (!strcmp(user_input, "exit"))
-    {
-        printf("¹ÙÀÌ¹ÙÀÌ\n");
-        return true;
-    }
-    return false;
-}
-
-void show_SelectMenu(int step)
+void show_SelectMenu(const int& step)
 {
     printf(CLEAR_SCREEN);
     switch (step)
@@ -259,48 +158,12 @@ void show_SelectMenu(int step)
     case SteeringSystem_Q:
         printMenu_SelectSteering();
         break;
-    case Run_Test:
+    case Run_Test_Q:
         printMenu_RunTest();
         break;
     default:
         break;
     }
-}
-
-void printMenu_RunTest()
-{
-    printf("¸ÚÁø Â÷·®ÀÌ ¿Ï¼ºµÇ¾ú½À´Ï´Ù.\n");
-    printf("¾î¶² µ¿ÀÛÀ» ÇÒ±î¿ä?\n");
-    printf("0. Ã³À½ È­¸éÀ¸·Î µ¹¾Æ°¡±â\n");
-    printf("1. RUN\n");
-    printf("2. Test\n");
-}
-
-void printMenu_SelectSteering()
-{
-    printf("¾î¶² Á¶ÇâÀåÄ¡¸¦ ¼±ÅÃÇÒ±î¿ä?\n");
-    printf("0. µÚ·Î°¡±â\n");
-    printf("1. BOSCH\n");
-    printf("2. MOBIS\n");
-}
-
-void printMenu_SelectBrake()
-{
-    printf("¾î¶² Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÒ±î¿ä?\n");
-    printf("0. µÚ·Î°¡±â\n");
-    printf("1. MANDO\n");
-    printf("2. CONTINENTAL\n");
-    printf("3. BOSCH\n");
-}
-
-void printMenu_SelectEngine()
-{
-    printf("¾î¶² ¿£ÁøÀ» Å¾ÀçÇÒ±î¿ä?\n");
-    printf("0. µÚ·Î°¡±â\n");
-    printf("1. GM\n");
-    printf("2. TOYOTA\n");
-    printf("3. WIA\n");
-    printf("4. °íÀå³­ ¿£Áø\n");
 }
 
 void printMenu_SelectCarType()
@@ -311,80 +174,224 @@ void printMenu_SelectCarType()
     printf(" |                      O  |\n");
     printf(" '-(@)----------------(@)--'\n");
     printf("===============================\n");
-    printf("¾î¶² Â÷·® Å¸ÀÔÀ» ¼±ÅÃÇÒ±î¿ä?\n");
+    printf("ì–´ë–¤ ì°¨ëŸ‰ íƒ€ìž…ì„ ì„ íƒí• ê¹Œìš”?\n");
     printf("1. Sedan\n");
     printf("2. SUV\n");
     printf("3. Truck\n");
 }
 
-void selectCarType(int answer)
+void printMenu_SelectEngine()
+{
+    printf("ì–´ë–¤ ì—”ì§„ì„ íƒ‘ìž¬í• ê¹Œìš”?\n");
+    printf("0. ë’¤ë¡œê°€ê¸°\n");
+    printf("1. GM\n");
+    printf("2. TOYOTA\n");
+    printf("3. WIA\n");
+    printf("4. ê³ ìž¥ë‚œ ì—”ì§„\n");
+}
+
+void printMenu_SelectBrake()
+{
+    printf("ì–´ë–¤ ì œë™ìž¥ì¹˜ë¥¼ ì„ íƒí• ê¹Œìš”?\n");
+    printf("0. ë’¤ë¡œê°€ê¸°\n");
+    printf("1. MANDO\n");
+    printf("2. CONTINENTAL\n");
+    printf("3. BOSCH\n");
+}
+
+void printMenu_SelectSteering()
+{
+    printf("ì–´ë–¤ ì¡°í–¥ìž¥ì¹˜ë¥¼ ì„ íƒí• ê¹Œìš”?\n");
+    printf("0. ë’¤ë¡œê°€ê¸°\n");
+    printf("1. BOSCH\n");
+    printf("2. MOBIS\n");
+}
+
+void printMenu_RunTest()
+{
+    printf("ë©‹ì§„ ì°¨ëŸ‰ì´ ì™„ì„±ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
+    printf("ì–´ë–¤ ë™ìž‘ì„ í• ê¹Œìš”?\n");
+    printf("0. ì²˜ìŒ í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê¸°\n");
+    printf("1. RUN\n");
+    printf("2. Test\n");
+}
+
+
+void clear_UserInput(char user_input[100])
+{
+    char* context = nullptr;
+    user_input = strtok_s(user_input, "\r", &context);
+    if (user_input != nullptr)
+    {
+        user_input = strtok_s(user_input, "\n", &context);
+    }
+}
+
+bool isAnswer_Exit(const char* user_input)
+{
+    if (!strcmp(user_input, "exit"))
+    {
+        printf("ë°”ì´ë°”ì´\n");
+        return true;
+    }
+    return false;
+}
+
+bool check_AnswerIsNumber(char* user_input, int& answer)
+{
+    char* stringAnswer;
+    answer = strtol(user_input, &stringAnswer, 10); // ë¬¸ìžì—´ì„ 10ì§„ìˆ˜ë¡œ ë³€í™˜
+    if (*stringAnswer != '\0')
+    {
+        printf("ERROR :: ìˆ«ìžë§Œ ìž…ë ¥ ê°€ëŠ¥\n");
+        delay(800);
+        return false;
+    }
+    return true;
+}
+
+bool check_Invalid_inputNum(const int& step, const int& answer)
+{
+    if (step == CarType_Q && !(answer >= 1 && answer <= 3))
+    {
+        printf("ERROR :: ì°¨ëŸ‰ íƒ€ìž…ì€ 1 ~ 3 ë²”ìœ„ë§Œ ì„ íƒ ê°€ëŠ¥\n");
+        delay(800);
+        return true;
+    }
+
+    if (step == Engine_Q && !(answer >= 0 && answer <= 4))
+    {
+        printf("ERROR :: ì—”ì§„ì€ 1 ~ 4 ë²”ìœ„ë§Œ ì„ íƒ ê°€ëŠ¥\n");
+        delay(800);
+        return true;
+    }
+
+    if (step == brakeSystem_Q && !(answer >= 0 && answer <= 3))
+    {
+        printf("ERROR :: ì œë™ìž¥ì¹˜ëŠ” 1 ~ 3 ë²”ìœ„ë§Œ ì„ íƒ ê°€ëŠ¥\n");
+        delay(800);
+        return true;
+    }
+
+    if (step == SteeringSystem_Q && !(answer >= 0 && answer <= 2))
+    {
+        printf("ERROR :: ì¡°í–¥ìž¥ì¹˜ëŠ” 1 ~ 2 ë²”ìœ„ë§Œ ì„ íƒ ê°€ëŠ¥\n");
+        delay(800);
+        return true;
+    }
+
+    if (step == Run_Test_Q && !(answer >= 0 && answer <= 2))
+    {
+        printf("ERROR :: Run ë˜ëŠ” Test ì¤‘ í•˜ë‚˜ë¥¼ ì„ íƒ í•„ìš”\n");
+        delay(800);
+        return true;
+    }
+    return false;
+}
+
+
+void do_Answer(int& step, const int& answer)
+{
+    int delayTime = 800;
+    switch (step)
+    {
+    case CarType_Q:
+        selectCarType(answer);
+        step = Engine_Q;
+        break;
+    case Engine_Q:
+        selectEngine(answer);
+        step = brakeSystem_Q;
+        break;
+    case brakeSystem_Q:
+        selectbrakeSystem(answer);
+        step = SteeringSystem_Q;
+        break;
+    case SteeringSystem_Q:
+        selectSteeringSystem(answer);
+        step = Run_Test_Q;
+        break;
+    case Run_Test_Q:
+        if (answer == RunTest::Run)
+            runProducedCar();
+        else if (answer == RunTest::Test)
+        {
+            printf("Test...\n");
+            delay(1500);
+            testProducedCar();
+        }
+        delayTime = 2000;
+        break;
+    default:
+        break;
+    }
+    delay(delayTime);
+}
+
+void selectCarType(const int& answer)
 {
     stack[CarType_Q] = answer;
-    if (answer == 1)
-        printf("Â÷·® Å¸ÀÔÀ¸·Î SedanÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 2)
-        printf("Â÷·® Å¸ÀÔÀ¸·Î SUVÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 3)
-        printf("Â÷·® Å¸ÀÔÀ¸·Î TruckÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
+    if (answer == CarType::SEDAN)
+        printf("ì°¨ëŸ‰ íƒ€ìž…ìœ¼ë¡œ Sedanì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == CarType::SUV)
+        printf("ì°¨ëŸ‰ íƒ€ìž…ìœ¼ë¡œ SUVì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == CarType::TRUCK)
+        printf("ì°¨ëŸ‰ íƒ€ìž…ìœ¼ë¡œ Truckì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
 }
 
-void selectEngine(int answer)
+void selectEngine(const int& answer)
 {
     stack[Engine_Q] = answer;
-    if (answer == 1)
-        printf("GM ¿£ÁøÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 2)
-        printf("TOYOTA ¿£ÁøÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 3)
-        printf("WIA ¿£ÁøÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
+    if (answer == Engine::GM)
+        printf("GM ì—”ì§„ì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == Engine::TOYOTA)
+        printf("TOYOTA ì—”ì§„ì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == Engine::WIA)
+        printf("WIA ì—”ì§„ì„ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
 }
 
-void selectbrakeSystem(int answer)
+void selectbrakeSystem(const int& answer)
 {
     stack[brakeSystem_Q] = answer;
-    if (answer == 1)
-        printf("MANDO Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 2)
-        printf("CONTINENTAL Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 3)
-        printf("BOSCH Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
+    if (answer == brakeSystem::MANDO)
+        printf("MANDO ì œë™ìž¥ì¹˜ë¥¼ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == brakeSystem::CONTINENTAL)
+        printf("CONTINENTAL ì œë™ìž¥ì¹˜ë¥¼ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == brakeSystem::BOSCH_B)
+        printf("BOSCH ì œë™ìž¥ì¹˜ë¥¼ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
 }
 
-void selectSteeringSystem(int answer)
+void selectSteeringSystem(const int& answer)
 {
     stack[SteeringSystem_Q] = answer;
-    if (answer == 1)
-        printf("BOSCH Á¶ÇâÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
-    if (answer == 2)
-        printf("MOBIS Á¶ÇâÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n");
+    if (answer == SteeringSystem::BOSCH_S)
+        printf("BOSCH ì¡°í–¥ìž¥ì¹˜ë¥¼ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
+    if (answer == SteeringSystem::MOBIS)
+        printf("MOBIS ì¡°í–¥ìž¥ì¹˜ë¥¼ ì„ íƒí•˜ì…¨ìŠµë‹ˆë‹¤.\n");
 }
 
 int isValidCheck()
 {
+    if (stack[brakeSystem_Q] == BOSCH_B && stack[SteeringSystem_Q] != BOSCH_S)
+    {
+        return false;
+    }
+
     if (stack[CarType_Q] == SEDAN && stack[brakeSystem_Q] == CONTINENTAL)
     {
         return false;
     }
-    else if (stack[CarType_Q] == SUV && stack[Engine_Q] == TOYOTA)
+
+    if (stack[CarType_Q] == SUV && stack[Engine_Q] == TOYOTA)
     {
         return false;
     }
-    else if (stack[CarType_Q] == TRUCK && stack[Engine_Q] == WIA)
+
+    if (stack[CarType_Q] == TRUCK && (stack[Engine_Q] == WIA || stack[brakeSystem_Q] == MANDO))
     {
         return false;
     }
-    else if (stack[CarType_Q] == TRUCK && stack[brakeSystem_Q] == MANDO)
-    {
-        return false;
-    }
-    else if (stack[brakeSystem_Q] == BOSCH_B && stack[SteeringSystem_Q] != BOSCH_S)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+
     return true;
 }
 
@@ -392,41 +399,41 @@ void runProducedCar()
 {
     if (isValidCheck() == false)
     {
-        printf("ÀÚµ¿Â÷°¡ µ¿ÀÛµÇÁö ¾Ê½À´Ï´Ù\n");
+        printf("ìžë™ì°¨ê°€ ë™ìž‘ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤\n");
     }
     else
     {
         if (stack[Engine_Q] == 4)
         {
-            printf("¿£ÁøÀÌ °íÀå³ªÀÖ½À´Ï´Ù.\n");
-            printf("ÀÚµ¿Â÷°¡ ¿òÁ÷ÀÌÁö ¾Ê½À´Ï´Ù.\n");
+            printf("ì—”ì§„ì´ ê³ ìž¥ë‚˜ìžˆìŠµë‹ˆë‹¤.\n");
+            printf("ìžë™ì°¨ê°€ ì›€ì§ì´ì§€ ì•ŠìŠµë‹ˆë‹¤.\n");
         }
         else
         {
-            if (stack[CarType_Q] == 1)
+            if (stack[CarType_Q] == CarType::SEDAN)
                 printf("Car Type : Sedan\n");
-            if (stack[CarType_Q] == 2)
+            if (stack[CarType_Q] == CarType::SUV)
                 printf("Car Type : SUV\n");
-            if (stack[CarType_Q] == 3)
+            if (stack[CarType_Q] == CarType::TRUCK)
                 printf("Car Type : Truck\n");
-            if (stack[Engine_Q] == 1)
+            if (stack[Engine_Q] == Engine::GM)
                 printf("Engine : GM\n");
-            if (stack[Engine_Q] == 2)
+            if (stack[Engine_Q] == Engine::TOYOTA)
                 printf("Engine : TOYOTA\n");
-            if (stack[Engine_Q] == 3)
+            if (stack[Engine_Q] == Engine::WIA)
                 printf("Engine : WIA\n");
-            if (stack[brakeSystem_Q] == 1)
+            if (stack[brakeSystem_Q] == brakeSystem::MANDO)
                 printf("Brake System : Mando");
-            if (stack[brakeSystem_Q] == 2)
+            if (stack[brakeSystem_Q] == brakeSystem::CONTINENTAL)
                 printf("Brake System : Continental\n");
-            if (stack[brakeSystem_Q] == 3)
+            if (stack[brakeSystem_Q] == brakeSystem::BOSCH_B)
                 printf("Brake System : Bosch\n");
-            if (stack[SteeringSystem_Q] == 1)
+            if (stack[SteeringSystem_Q] == SteeringSystem::BOSCH_S)
                 printf("SteeringSystem : Bosch\n");
-            if (stack[SteeringSystem_Q] == 2)
+            if (stack[SteeringSystem_Q] == SteeringSystem::MOBIS)
                 printf("SteeringSystem : Mobis\n");
 
-            printf("ÀÚµ¿Â÷°¡ µ¿ÀÛµË´Ï´Ù.\n");
+            printf("ìžë™ì°¨ê°€ ë™ìž‘ë©ë‹ˆë‹¤.\n");
         }
     }
 }
@@ -435,32 +442,32 @@ void testProducedCar()
 {
     if (stack[CarType_Q] == SEDAN && stack[brakeSystem_Q] == CONTINENTAL)
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : FAIL\n");
-        printf("Sedan¿¡´Â ContinentalÁ¦µ¿ÀåÄ¡ »ç¿ë ºÒ°¡\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : FAIL\n");
+        printf("Sedanì—ëŠ” Continentalì œë™ìž¥ì¹˜ ì‚¬ìš© ë¶ˆê°€\n");
     }
     else if (stack[CarType_Q] == SUV && stack[Engine_Q] == TOYOTA)
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : FAIL\n");
-        printf("SUV¿¡´Â TOYOTA¿£Áø »ç¿ë ºÒ°¡\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : FAIL\n");
+        printf("SUVì—ëŠ” TOYOTAì—”ì§„ ì‚¬ìš© ë¶ˆê°€\n");
     }
     else if (stack[CarType_Q] == TRUCK && stack[Engine_Q] == WIA)
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : FAIL\n");
-        printf("Truck¿¡´Â WIA¿£Áø »ç¿ë ºÒ°¡\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : FAIL\n");
+        printf("Truckì—ëŠ” WIAì—”ì§„ ì‚¬ìš© ë¶ˆê°€\n");
     }
     else if (stack[CarType_Q] == TRUCK && stack[brakeSystem_Q] == MANDO)
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : FAIL\n");
-        printf("Truck¿¡´Â MandoÁ¦µ¿ÀåÄ¡ »ç¿ë ºÒ°¡\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : FAIL\n");
+        printf("Truckì—ëŠ” Mandoì œë™ìž¥ì¹˜ ì‚¬ìš© ë¶ˆê°€\n");
     }
     else if (stack[brakeSystem_Q] == BOSCH_B && stack[SteeringSystem_Q] != BOSCH_S)
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : FAIL\n");
-        printf("BoschÁ¦µ¿ÀåÄ¡¿¡´Â BoschÁ¶ÇâÀåÄ¡ ÀÌ¿Ü »ç¿ë ºÒ°¡\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : FAIL\n");
+        printf("Boschì œë™ìž¥ì¹˜ì—ëŠ” Boschì¡°í–¥ìž¥ì¹˜ ì´ì™¸ ì‚¬ìš© ë¶ˆê°€\n");
     }
     else
     {
-        printf("ÀÚµ¿Â÷ ºÎÇ° Á¶ÇÕ Å×½ºÆ® °á°ú : PASS\n");
+        printf("ìžë™ì°¨ ë¶€í’ˆ ì¡°í•© í…ŒìŠ¤íŠ¸ ê²°ê³¼ : PASS\n");
     }
 }
 
