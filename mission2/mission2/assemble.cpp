@@ -1,4 +1,4 @@
-﻿#ifdef NDEBUG
+﻿#ifdef _DEBUG
 #pragma once
 #include "gmock/gmock.h"
 

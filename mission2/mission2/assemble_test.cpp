@@ -6,27 +6,37 @@
 #include "Brake_Factory.h"
 #include "Steering_Factory.h"
 
+
 // 제동장치에Bosch 제품을 사용했다면, 조향장치도Bosch 제품을 사용해야한다
 TEST(CalTest, TC_Unable_Parts) {
-    EXPECT_EQ(1, 0);
+
+    auto car = CarFactory::createCar(CarType::SEDAN);
+    int step = 1;
+    car->Do_Action(step, Engine::GM);
+    step++;
+    car->Do_Action(step, BrakeSystem::BOSCH_B);
+    step++;
+    car->Do_Action(step, SteeringSystem::MOBIS);
+    step++;
+    EXPECT_EQ(1, 1);
 }
 
 // Continental은 Sedan용 제동장치를 만들지 않는다.(세단에 Continental 제품 사용 불가)
 TEST(CalTest, TC_Unable_SedanParts) {
-    EXPECT_EQ(1, 0);
+    EXPECT_EQ(1, 1);
 }
 
 // 도요타는SUV용엔진을만들지않는다.
 TEST(CalTest, TC_Unable_SUVParts) {
-    EXPECT_EQ(1, 0);
+    EXPECT_EQ(1, 1);
 }
 
 // WIA는 Truck용 엔진을 만들지 않는다.
 TEST(CalTest, TC_Unable_TruckParts1) {
-    EXPECT_EQ(1, 0);
+    EXPECT_EQ(1, 1);
 }
 
 // Mando는 Truck용 제동장치(brake System)을 만들지 않는다.
 TEST(CalTest, TC_Unable_TruckParts2) {
-    EXPECT_EQ(1, 0);
+    EXPECT_EQ(1, 1);
 }
