@@ -13,9 +13,7 @@ TEST(CalTest, TC_Unable_Parts) {
     auto car = CarFactory::createCar(CarType::SEDAN);
     int step = 1;
     car->Do_Action(step, Engine::GM);
-    step++;
     car->Do_Action(step, BrakeSystem::BOSCH_B);
-    step++;
     car->Do_Action(step, SteeringSystem::MOBIS);
     car->testProducedCar();
     EXPECT_EQ(1, 1);
