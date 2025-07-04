@@ -45,6 +45,7 @@ public:
     bool isValidCheck() {
         if (part_Brake->Brand == BrakeSystem::BOSCH_B && part_Steering->Brand != SteeringSystem::BOSCH_S)
             return false;
+        return true;
     }
     
     void printCarInfo() {
