@@ -242,5 +242,6 @@ public:
             return false;
         if (part_Engine->Brand == Engine::WIA || part_Brake->Brand == BrakeSystem::MANDO)
             return false;
+        return true;
     }
 };
