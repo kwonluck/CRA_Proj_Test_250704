@@ -17,7 +17,7 @@ TEST(CalTest, TC_Unable_Parts) {
     car->Do_Action(step, BrakeSystem::BOSCH_B);
     step++;
     car->Do_Action(step, SteeringSystem::MOBIS);
-    step++;
+    car->testProducedCar();
     EXPECT_EQ(1, 1);
 }
 
