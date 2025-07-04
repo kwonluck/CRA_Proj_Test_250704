@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -125,18 +125,20 @@
   <ItemGroup>
     <ClCompile Include="assemble.cpp" />
     <ClCompile Include="assemble_test.cpp" />
-    <ClCompile Include="Break.cpp" />
-    <ClCompile Include="Car.cpp" />
-    <ClCompile Include="CarFactory.cpp" />
+    <ClCompile Include="Brake_Factory.h" />
+    <ClCompile Include="Car_IF.h" />
+    <ClCompile Include="Car_Factory.h" />
     <ClCompile Include="defineEnum.h" />
-    <ClCompile Include="DisplayMenu_Factory.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Steering.cpp" />
+    <ClCompile Include="Engine_Factory.h" />
+    <ClCompile Include="Engine_IF.h" />
+    <ClCompile Include="Steering_Factory.h" />
+    <ClCompile Include="Steering_IF.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Brake_IF.h" />
     <ClInclude Include="DisplayMenu_Factory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -12,14 +12,42 @@ public:
     Menu() {
         printf(CLEAR_SCREEN);
     }
+    virtual ~Menu() {}
+
     virtual void show_Menu() = 0;
     virtual void show_YourSelect(const int& answer) = 0;
-    virtual ~Menu() {}
+    virtual bool check_Valid_inputNum(const int& step, const int& answer) = 0;
+    virtual void return_Menu(int& step) {
+        step -= 1;
+    }
 
     void show_InputPrompt() {
         printf("===============================\n");
         printf("INPUT > ");
     }
+
+    bool isAnswer_Exit(const char* user_input)
+    {
+        if (!strcmp(user_input, "exit"))
+        {
+            printf("바이바이\n");
+            return true;
+        }
+        return false;
+    }
+
+    bool check_AnswerIsNumber(char* user_input, int& answer) {
+        char* stringAnswer;
+        answer = strtol(user_input, &stringAnswer, 10); // 문자열을 10진수로 변환
+        if (*stringAnswer != '\0') {
+            printf("ERROR :: 숫자만 입력 가능\n");
+            delay(delayTime);
+            return false;
+        }
+        return true;
+    }
+
+
 };
 
 class Select_CarType : public Menu {
@@ -36,7 +64,8 @@ public:
         printf("2. SUV\n");
         printf("3. Truck\n");
     }
-    void show_YourSelect(const int& answer) {
+
+    void show_YourSelect(const int& answer) override {
         if (answer == CarType::SEDAN)
             printf("차량 타입으로 Sedan을 선택하셨습니다.\n");
         if (answer == CarType::SUV)
@@ -44,6 +73,16 @@ public:
         if (answer == CarType::TRUCK)
             printf("차량 타입으로 Truck을 선택하셨습니다.\n");
         delay(delayTime);
+    }
+
+    bool check_Valid_inputNum(const int& step, const int& answer) override
+    {
+        if (answer >= 1 && answer <= 3)
+            return true;
+
+        printf("ERROR :: 차량 타입은 1 ~ 3 범위만 선택 가능\n");
+        delay(delayTime);
+        return false;
     }
 };
 
@@ -57,7 +96,8 @@ public:
         printf("3. WIA\n");
         printf("4. 고장난 엔진\n");
     }
-    void show_YourSelect(const int& answer) {
+
+    void show_YourSelect(const int& answer) override {
         if (answer == Engine::GM)
             printf("GM 엔진을 선택하셨습니다.\n");
         if (answer == Engine::TOYOTA)
@@ -65,6 +105,16 @@ public:
         if (answer == Engine::WIA)
             printf("WIA 엔진을 선택하셨습니다.\n");
         delay(delayTime);
+    }
+
+    bool check_Valid_inputNum(const int& step, const int& answer) override
+    {
+        if (answer >= 0 && answer <= 4)
+            return true;
+
+        printf("ERROR :: 엔진은 1 ~ 4 범위만 선택 가능\n");
+        delay(delayTime);
+        return false;
     }
 };
 
@@ -77,14 +127,25 @@ public:
         printf("2. CONTINENTAL\n");
         printf("3. BOSCH\n");
     }
-    void show_YourSelect(const int& answer) {
-        if (answer == brakeSystem::MANDO)
+
+    void show_YourSelect(const int& answer) override {
+        if (answer == BrakeSystem::MANDO)
             printf("MANDO 제동장치를 선택하셨습니다.\n");
-        if (answer == brakeSystem::CONTINENTAL)
+        if (answer == BrakeSystem::CONTINENTAL)
             printf("CONTINENTAL 제동장치를 선택하셨습니다.\n");
-        if (answer == brakeSystem::BOSCH_B)
+        if (answer == BrakeSystem::BOSCH_B)
             printf("BOSCH 제동장치를 선택하셨습니다.\n");
         delay(delayTime);
+    }
+
+    bool check_Valid_inputNum(const int& step, const int& answer) override
+    {
+        if (answer >= 0 && answer <= 3)
+            return true;
+
+        printf("ERROR :: 제동장치는 1 ~ 3 범위만 선택 가능\n");
+        delay(delayTime);
+        return false;
     }
 };
 
@@ -96,12 +157,23 @@ public:
         printf("1. BOSCH\n");
         printf("2. MOBIS\n");
     }
-    void show_YourSelect(const int& answer) {
+
+    void show_YourSelect(const int& answer) override {
         if (answer == SteeringSystem::BOSCH_S)
             printf("BOSCH 조향장치를 선택하셨습니다.\n");
         if (answer == SteeringSystem::MOBIS)
             printf("MOBIS 조향장치를 선택하셨습니다.\n");
         delay(delayTime);
+    }
+
+    bool check_Valid_inputNum(const int& step, const int& answer) override
+    {
+        if (answer >= 0 && answer <= 2)
+            return true;
+
+        printf("ERROR :: 조향장치는 1 ~ 2 범위만 선택 가능\n");
+        delay(delayTime);
+        return false;
     }
 };
 
@@ -115,25 +187,40 @@ public:
         printf("1. RUN\n");
         printf("2. Test\n");
     }
-    void show_YourSelect(const int& answer) {
+
+    void show_YourSelect(const int& answer) override {
         if (answer == RunTest::Test)
         {
             printf("Test...\n");
             delay(delayTime);
         }
     }
+
+    bool check_Valid_inputNum(const int& step, const int& answer) override
+    {
+        if (answer >= 0 && answer <= 2)
+            return true;
+
+        printf("ERROR :: Run 또는 Test 중 하나를 선택 필요\n");
+        delay(delayTime);
+        return false;
+    }
+
+    void return_Menu(int& step) override {
+        step = 0;
+    }
 };
 
 
 class DisplayMenu_Factory {
-    public:
-        // 타입에 따라 객체 생성
-        static std::unique_ptr<Menu> createMenu(QuestionType type) {
-            if (type == QuestionType::CarType_Q) return std::make_unique<Select_CarType>();
-            if (type == QuestionType::Engine_Q) return std::make_unique<Select_EngineType>();
-            if (type == QuestionType::brakeSystem_Q) return std::make_unique<Select_BrakeType>();
-            if (type == QuestionType::SteeringSystem_Q) return std::make_unique<Select_SteeringType>();
-            if (type == QuestionType::Run_Test_Q) return std::make_unique<Select_RunTestType>();
-            return nullptr;
-        }
+public:
+    // 타입에 따라 객체 생성
+    static std::unique_ptr<Menu> createMenu(QuestionType type) {
+        if (type == QuestionType::CarType_Q) return std::make_unique<Select_CarType>();
+        if (type == QuestionType::Engine_Q) return std::make_unique<Select_EngineType>();
+        if (type == QuestionType::brakeSystem_Q) return std::make_unique<Select_BrakeType>();
+        if (type == QuestionType::SteeringSystem_Q) return std::make_unique<Select_SteeringType>();
+        if (type == QuestionType::Run_Test_Q) return std::make_unique<Select_RunTestType>();
+        return nullptr;
+    }
 };

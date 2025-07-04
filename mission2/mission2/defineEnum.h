@@ -20,10 +20,11 @@ enum Engine
 {
     GM = 1,
     TOYOTA,
-    WIA
+    WIA,
+    UnableEngine
 };
 
-enum brakeSystem
+enum BrakeSystem
 {
     MANDO = 1,
     CONTINENTAL,
